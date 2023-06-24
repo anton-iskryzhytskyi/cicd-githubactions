@@ -1,0 +1,40 @@
+name: Deploy to ECS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up AWS credentials and region eu-west-1
+        run: |
+          echo "[default]" >> ~/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "AWS_REGION=eu-west-1" >> $GITHUB_ENV
+          chmod 600 ~/.aws/credentials
+
+      - name: Build Docker image
+        run: docker build -t lab-web-app .
+
+      - name: Deploy ECR
+        run: cdk deploy --app 'npx ts-node cdk/ecr.ts'
+
+      - name: Get ECR login credentials
+        run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
+
+      - name: Tag image in ECR
+        run: docker tag lab-web-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/lab-web-app:latest
+
+      - name: Push image to ECR
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/lab-web-app:latest
+
+      - name: Deploy ECS
+        run: cdk deploy --app 'npx ts-node cdk/ecs.ts'

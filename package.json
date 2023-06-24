@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "aws-cdk-lib": "^2.84.0",
+    "constructs": "^10.2.52"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1"
+  }
+}
