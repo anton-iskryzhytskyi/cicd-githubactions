@@ -31,11 +31,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Bootstrap CDK
-        run: npx cdk bootstrap aws://${{ secrets.AWS_ACCOUNT_ID }}/eu-west-1
+      - name: Install cdk globally
+        run: npm i -g aws-cdk
 
       - name: Deploy ECR
-        run: npx cdk deploy --app 'npx ts-node cdk/ecr.ts'
+        run: cdk deploy --app 'npx ts-node cdk/ecr.ts'
 
       - name: Get ECR login credentials
         run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
@@ -47,4 +47,4 @@ jobs:
         run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/lab-web-app:latest
 
       - name: Deploy ECS
-        run: npx cdk deploy --app 'npx ts-node cdk/ecs.ts'
+        run: cdk deploy --app 'npx ts-node cdk/ecs.ts'
