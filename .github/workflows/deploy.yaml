@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  oneBigPipeline:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,11 +25,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install aws-cdk globally
-        run: npm i -g aws-cdk
-
       - name: Bootstrap CDK Stack
-        run: cdk bootstrap ${{ secrets.AWS_ACCOUNT_ID }}/eu-west-1
+        run: npx cdk bootstrap ${{ secrets.AWS_ACCOUNT_ID }}/eu-west-1
 
       - name: Build Docker image
         run: docker build -t lab-web-app .
@@ -38,7 +35,7 @@ jobs:
         run: npm ci
 
       - name: Deploy ECR
-        run: cdk deploy --app 'npx ts-node cdk/ecr.ts' --require-approval never
+        run: npx cdk deploy --app 'npx ts-node cdk/ecr.ts' --require-approval never
 
       - name: Get ECR login credentials
         run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
