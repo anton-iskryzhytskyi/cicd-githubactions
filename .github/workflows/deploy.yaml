@@ -29,7 +29,7 @@ jobs:
         run: npm i -g aws-cdk
 
       - name: Bootstrap CDK Stack
-        run: cdk bootstrap
+        run: cdk bootstrap ${{ secrets.AWS_ACCOUNT_ID }}/eu-west-1
 
       - name: Build Docker image
         run: docker build -t lab-web-app .
