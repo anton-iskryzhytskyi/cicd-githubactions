@@ -47,4 +47,4 @@ jobs:
         run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/lab-web-app:latest
 
       - name: Deploy ECS
-        run: cdk deploy --app 'npx ts-node cdk/ecs.ts' --require-approval never
+        run: npx cdk deploy --app 'npx ts-node cdk/ecs.ts' --require-approval never
