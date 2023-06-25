@@ -7,7 +7,7 @@ import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
 const accountId = process.env.AWS_ACCOUNT_ID;
-const region = process.env.AWS_REGION || 'eu-west-1';
+const region = process.env.AWS_REGION || 'us-east-1';
 const appName = process.env.APP_NAME || 'lab-web-app';
 const appPort = Number(process.env.APP_PORT || 80);
 

@@ -3,7 +3,7 @@ import * as ecr from 'aws-cdk-lib/aws-ecr';
 import { Construct } from 'constructs';
 
 const accountId = process.env.AWS_ACCOUNT_ID;
-const region = process.env.AWS_REGION || 'eu-west-1';
+const region = process.env.AWS_REGION || 'us-east-1';
 const repositoryName = process.env.REPOSITORY_NAME || 'lab-web-app'
 
 export class LabEcrStack extends cdk.Stack {
