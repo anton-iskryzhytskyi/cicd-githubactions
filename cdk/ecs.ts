@@ -16,7 +16,7 @@ export class LabEcsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const vpc = new ec2.Vpc(this, 'LabVpc', { maxAzs: 1 });
+    const vpc = new ec2.Vpc(this, 'LabVpc', { maxAzs: 1, natGateways: 0 });
 
     const repository = ecr.Repository.fromRepositoryName(this, 'LabECRRepository', appName);
 
@@ -26,6 +26,7 @@ export class LabEcsStack extends cdk.Stack {
     });
     
 
+    // const cluster = new ecs.Cluster(this, 'LabCluster', { vpc });
     const cluster = new ecs.Cluster(this, 'LabCluster', { vpc });
 
     const taskDefinition = new ecs.FargateTaskDefinition(this, 'LabTaskDefinition');
@@ -40,6 +41,7 @@ export class LabEcsStack extends cdk.Stack {
     container.addPortMappings({ containerPort: appPort });
     container.addEnvironment('APP_PORT', String(appPort));
 
+    // const securityGroup = new ec2.SecurityGroup(this, 'LabServiceSecurityGroup', { vpc });
     const securityGroup = new ec2.SecurityGroup(this, 'LabServiceSecurityGroup', { vpc });
     securityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(appPort));
 
