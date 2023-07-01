@@ -22,11 +22,9 @@ export class LabEcsStack extends cdk.Stack {
 
     const logGroup = new logs.LogGroup(this, 'LabLogGroup', {
       logGroupName: appName,
-      retention: logs.RetentionDays.ONE_DAY, // Задає тривалість збереження логів (наприклад, 7 днів)
+      retention: logs.RetentionDays.ONE_DAY,
     });
-    
 
-    // const cluster = new ecs.Cluster(this, 'LabCluster', { vpc });
     const cluster = new ecs.Cluster(this, 'LabCluster', { vpc });
 
     const taskDefinition = new ecs.FargateTaskDefinition(this, 'LabTaskDefinition');
@@ -41,7 +39,6 @@ export class LabEcsStack extends cdk.Stack {
     container.addPortMappings({ containerPort: appPort });
     container.addEnvironment('APP_PORT', String(appPort));
 
-    // const securityGroup = new ec2.SecurityGroup(this, 'LabServiceSecurityGroup', { vpc });
     const securityGroup = new ec2.SecurityGroup(this, 'LabServiceSecurityGroup', { vpc });
     securityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(appPort));
 
